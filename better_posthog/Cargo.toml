@@ -1,0 +1,23 @@
+[package]
+name = "better_posthog"
+version = "0.0.0"
+description = "An ergonomic Rust SDK for PostHog"
+repository = "https://github.com/niusia-ua/better-posthog-rust"
+authors = ["Nazar Antoniuk <nazarantoniuk18@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["posthog", "analytics", "metrics", "telemetry", "tracking"]
+categories = ["api-bindings"]
+edition = { workspace = true }
+
+[lints]
+workspace = true
+
+[dependencies]
+reqwest = { version = "0.12.26", features = ["blocking", "json"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+uuid = { version = "1.19.0", features = ["v7"] }
+os_info = "3.14.0"
+log = "0.4.29"
+semver = "1.0.27"

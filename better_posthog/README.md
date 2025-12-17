@@ -1,0 +1,58 @@
+# `better_posthog`
+
+An ergonomic Rust SDK for [PostHog](https://posthog.com/).
+
+## Features
+
+- Configurable API client.
+- Non-blocking and error-free event capture with background worker thread.
+- Builder pattern for flexible event construction.
+- Automatic OS and library metadata enrichment.
+- Graceful shutdown with configurable timeout.
+
+## Usage
+
+```rust
+use better_posthog::{init, events, ClientConfig, Event};
+
+fn main() {
+  // Initialize the client.
+  let _guard = init(ClientConfig::new("phc_your_api_key"));
+
+  // Capture a single event.
+  events::capture(Event::new("page_view", "user_123"));
+
+  // Use the builder for more control.
+  events::capture(
+    Event::builder()
+      .event("button_click")
+      .distinct_id("user_123")
+      .property("button_id", "submit")
+      .build()
+    );
+
+  // Batch multiple events.
+  events::batch(vec![
+    Event::new("event_1", "user_123"),
+    Event::new("event_2", "user_123"),
+  ]);
+
+  // Guard drop triggers graceful shutdown.
+}
+```
+
+## Configuration
+
+```rust
+use better_posthog::{init, ClientConfig, Host};
+
+let config = ClientConfig::new("phc_your_api_key")
+  .host(Host::EU) // or `Host::US`, `Host::Custom(String::from("https://..."))`
+  .shutdown_timeout(std::time::Duration::from_secs(5));
+
+let _guard = init(config);
+```
+
+## License
+
+[MIT](../License)
