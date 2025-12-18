@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["better_posthog"]
+members = ["better-posthog"]
 
 [workspace.package]
 edition = "2024"
