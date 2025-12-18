@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["better-posthog"]
+members = ["better-posthog", "tauri-plugin-better-posthog"]
 
 [workspace.package]
 edition = "2024"
