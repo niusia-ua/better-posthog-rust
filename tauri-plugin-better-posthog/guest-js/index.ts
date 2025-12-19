@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
  * @param event - The event name.
  * @param properties - Optional properties to be sent with the event.
  */
-export async function capture_event(
+export async function captureEvent(
   event: string,
   properties?: Record<string, any>,
 ) {
@@ -16,7 +16,7 @@ export async function capture_event(
  * Captures a batch of events.
  * @param events - An array of events to be captured.
  */
-export async function batch_events(
+export async function batchEvents(
   events: { event: string; properties?: Record<string, any> }[],
 ) {
   await invoke("plugin:better-posthog|batch", { events });
