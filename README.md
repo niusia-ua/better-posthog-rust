@@ -4,7 +4,8 @@ An ergonomic Rust SDK for [PostHog](https://posthog.com/).
 
 ## Crates
 
-- [`better_posthog`](./better_posthog) - Core SDK.
+- [`better-posthog`](./better-posthog) - Core SDK.
+- [`tauti-plugin-better-posthog`] - Tauri integration.
 
 ## License
 
