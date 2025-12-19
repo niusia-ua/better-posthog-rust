@@ -5,15 +5,18 @@
 //! # Quick Start
 //!
 //! ```no_run
-//! use better_posthog::{init, events, Event, ClientConfig};
+//! use better_posthog::{events, Event};
 //!
 //! // Initialize the client.
-//! let _guard = init(ClientConfig::new("phc_your_api_key"));
+//! let _guard = better_posthog::init(better_posthog::ClientConfig {
+//!   api_key: Some("phc_your_api_key".to_string()),
+//!   ..Default::default()
+//! });
 //!
 //! // Capture events.
 //! events::capture(Event::new("page_view", "user_123"));
 //!
-//! // Or use the builder pattern.
+//! // Or use the builder pattern for events.
 //! events::capture(
 //!   Event::builder()
 //!     .event("button_click")
@@ -80,6 +83,9 @@ impl Drop for ClientGuard {
 /// Returns a [`ClientGuard`] that must be held for the duration of the application.
 /// When the guard is dropped, it triggers graceful shutdown of the background worker.
 ///
+/// If no API key is provided in the configuration, the client will not be initialized.
+/// Event capture calls will be no-ops in this case.
+///
 /// # Panics
 ///
 /// Panics if called more than once.
@@ -87,16 +93,19 @@ impl Drop for ClientGuard {
 /// # Examples
 ///
 /// ```no_run
-/// use better_posthog::{init, ClientConfig, Host};
-///
-/// let config = ClientConfig::new("phc_your_api_key")
-///   .host(Host::EU)
-///   .shutdown_timeout(std::time::Duration::from_secs(5));
-///
-/// let _guard = init(config);
+/// let _guard = better_posthog::init(better_posthog::ClientConfig {
+///   api_key: Some("phc_your_api_key".to_string()),
+///   host: better_posthog::Host::EU,
+///   shutdown_timeout: std::time::Duration::from_secs(5),
+/// });
 /// ```
 pub fn init(config: ClientConfig) -> ClientGuard {
   let shutdown_timeout = config.shutdown_timeout;
+
+  if config.api_key.is_none() {
+    log::warn!("PostHog client not initialized: no API key provided");
+    return ClientGuard { shutdown_timeout };
+  }
 
   assert!(
     CLIENT.set(Client::new(config)).is_ok(),
@@ -118,11 +127,11 @@ pub fn init(config: ClientConfig) -> ClientGuard {
 /// }
 /// ```
 pub fn flush(timeout: std::time::Duration) -> bool {
-  CLIENT.get().map_or_else(
-    || {
-      log::warn!("PostHog client not initialized");
-      false
-    },
-    |client| client.worker.flush(timeout),
-  )
+  #[allow(clippy::option_if_let_else)]
+  if let Some(client) = CLIENT.get() {
+    client.worker.flush(timeout)
+  } else {
+    log::warn!("PostHog client not initialized");
+    false
+  }
 }

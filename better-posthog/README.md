@@ -17,7 +17,10 @@ use better_posthog::{init, events, ClientConfig, Event};
 
 fn main() {
   // Initialize the client.
-  let _guard = init(ClientConfig::new("phc_your_api_key"));
+  let _guard = better_posthog::init(better_posthog::ClientConfig {
+    api_key: Some("phc_your_api_key".to_string()),
+    ..Default::default()
+  });
 
   // Capture a single event.
   events::capture(Event::new("page_view", "user_123"));
@@ -29,7 +32,7 @@ fn main() {
       .distinct_id("user_123")
       .property("button_id", "submit")
       .build()
-    );
+  );
 
   // Batch multiple events.
   events::batch(vec![
@@ -44,13 +47,11 @@ fn main() {
 ## Configuration
 
 ```rust
-use better_posthog::{init, ClientConfig, Host};
-
-let config = ClientConfig::new("phc_your_api_key")
-  .host(Host::EU) // or `Host::US`, `Host::Custom(String::from("https://..."))`
-  .shutdown_timeout(std::time::Duration::from_secs(5));
-
-let _guard = init(config);
+let _guard = better_posthog::init(better_posthog::ClientConfig {
+  api_key: Some("phc_your_api_key".to_string()),
+  host: better_posthog::Host::EU, // or `Host::US`, `Host::Custom(String::from("https://..."))`
+  shutdown_timeout: std::time::Duration::from_secs(5),
+});
 ```
 
 ## License

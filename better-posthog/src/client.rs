@@ -22,37 +22,21 @@ impl Client {
 /// Configuration for the PostHog client.
 #[derive(Debug, Clone)]
 pub struct ClientConfig {
-  /// The PostHog API key.
-  pub api_key: String,
+  /// The PostHog API key. If `None`, the client will not be initialized.
+  pub api_key: Option<String>,
   /// The target PostHog host.
   pub host: Host,
   /// Timeout for graceful shutdown (default: 2 seconds).
   pub shutdown_timeout: Duration,
 }
 
-impl ClientConfig {
-  /// Creates a new client configuration with the given API key.
-  #[must_use]
-  pub fn new<S: Into<String>>(api_key: S) -> Self {
+impl Default for ClientConfig {
+  fn default() -> Self {
     Self {
-      api_key: api_key.into(),
+      api_key: None,
       host: Host::default(),
       shutdown_timeout: Duration::from_secs(2),
     }
-  }
-
-  /// Sets the target PostHog host.
-  #[must_use]
-  pub fn host(mut self, host: Host) -> Self {
-    self.host = host;
-    self
-  }
-
-  /// Sets the shutdown timeout duration.
-  #[must_use]
-  pub const fn shutdown_timeout(mut self, timeout: Duration) -> Self {
-    self.shutdown_timeout = timeout;
-    self
   }
 }
 

@@ -148,7 +148,7 @@ impl Drop for Worker {
 fn send_capture(client: &reqwest::blocking::Client, config: &ClientConfig, event: &Event) {
   let url = config.host.capture_url();
   let payload = CapturePayload {
-    api_key: &config.api_key,
+    api_key: config.api_key.as_ref().expect("API key must be present"),
     event: &event.event,
     distinct_id: &event.distinct_id,
     properties: &event.properties,
@@ -186,7 +186,7 @@ fn send_capture(client: &reqwest::blocking::Client, config: &ClientConfig, event
 fn send_batch(client: &reqwest::blocking::Client, config: &ClientConfig, events: &[Event]) {
   let url = config.host.batch_url();
   let payload = BatchPayload {
-    api_key: &config.api_key,
+    api_key: config.api_key.as_ref().expect("API key must be present"),
     batch: events
       .iter()
       .map(|event| {

@@ -1,8 +1,15 @@
 [workspace]
 resolver = "3"
-members = ["better_posthog"]
+members = [
+  "better-posthog",
+  "tauri-plugin-better-posthog",
+  "tauri-plugin-better-posthog/examples/tauri-app/src-tauri"
+]
 
 [workspace.package]
+repository = "https://github.com/niusia-ua/better-posthog-rust"
+authors = ["Tauri Programme within The Commons Conservancy"]
+license = "MIT"
 edition = "2024"
 
 [workspace.lints.clippy]
@@ -18,3 +25,7 @@ nursery = { level = "warn", priority = -1 }
 cargo = { level = "allow", priority = -1 }
 redundant_feature_names = "deny"
 wildcard_dependencies = "deny"
+
+[workspace.dependencies]
+better-posthog = { path = "better-posthog" }
+tauri-plugin-better-posthog = { path = "tauri-plugin-better-posthog" }
