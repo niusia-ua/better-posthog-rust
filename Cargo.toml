@@ -8,7 +8,7 @@ members = [
 
 [workspace.package]
 repository = "https://github.com/niusia-ua/better-posthog-rust"
-authors = ["Tauri Programme within The Commons Conservancy"]
+authors = ["Nazar Antoniuk <nazarantoniuk18@gmail.com>"]
 license = "MIT"
 edition = "2024"
 
