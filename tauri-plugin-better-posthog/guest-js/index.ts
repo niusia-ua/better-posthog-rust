@@ -1,9 +1,23 @@
-import { invoke } from '@tauri-apps/api/core'
+import { invoke } from "@tauri-apps/api/core";
 
-export async function ping(value: string): Promise<string | null> {
-  return await invoke<{value?: string}>('plugin:better-posthog|ping', {
-    payload: {
-      value,
-    },
-  }).then((r) => (r.value ? r.value : null));
+/**
+ * Captures a single event.
+ * @param event - The event name.
+ * @param properties - Optional properties to be sent with the event.
+ */
+export async function capture_event(
+  event: string,
+  properties?: Record<string, any>,
+) {
+  await invoke("plugin:better-posthog|capture", { event, properties });
+}
+
+/**
+ * Captures a batch of events.
+ * @param events - An array of events to be captured.
+ */
+export async function batch_events(
+  events: { event: string; properties?: Record<string, any> }[],
+) {
+  await invoke("plugin:better-posthog|batch", { events });
 }

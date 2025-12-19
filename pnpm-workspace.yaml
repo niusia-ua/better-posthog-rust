@@ -1,0 +1,3 @@
+packages:
+  - tauri-plugin-better-posthog/
+  - tauri-plugin-better-posthog/examples/*
