@@ -2,12 +2,9 @@
 name = "better-posthog"
 version = "0.0.0"
 description = "An ergonomic Rust SDK for PostHog"
-repository = "https://github.com/niusia-ua/better-posthog-rust"
-authors = ["Nazar Antoniuk <nazarantoniuk18@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-keywords = ["posthog", "analytics", "metrics", "telemetry", "tracking"]
-categories = ["api-bindings"]
+repository = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 edition = { workspace = true }
 
 [lints]

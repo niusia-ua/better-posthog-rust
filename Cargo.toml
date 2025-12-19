@@ -3,6 +3,9 @@ resolver = "3"
 members = ["better-posthog", "tauri-plugin-better-posthog"]
 
 [workspace.package]
+repository = "https://github.com/niusia-ua/better-posthog-rust"
+authors = ["Tauri Programme within The Commons Conservancy"]
+license = "MIT"
 edition = "2024"
 
 [workspace.lints.clippy]

@@ -1,9 +1,12 @@
 [package]
 name = "tauri-plugin-better-posthog"
 version = "0.0.0"
-description = "Tauri plugin for PostHog analytics"
-links = "tauri-plugin-better-posthog"
+description = "Tauri integration with PostHog"
+repository = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
 edition = { workspace = true }
+links = "tauri-plugin-better-posthog"
 
 [lints]
 workspace = true

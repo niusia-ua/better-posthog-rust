@@ -1,4 +1,4 @@
-//! Tauri plugin for PostHog analytics integration.
+//! Tauri integration with PostHog.
 //!
 //! This plugin wraps the [`better_posthog`] crate to provide seamless analytics integration for Tauri applications.
 //! It automatically handles:
