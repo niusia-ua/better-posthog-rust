@@ -10,14 +10,15 @@
 //!
 //! # Prerequisites
 //!
-//! The consuming application must initialize the `better_posthog` global client **before** registering this plugin:
+//! The consuming application must initialize the `better_posthog` global client **before** registering the plugin:
 //!
 //! ```ignore
-//! use better_posthog::{init, ClientConfig};
-//!
 //! fn main() {
 //!   // Initialize PostHog client first.
-//!   let _guard = init(ClientConfig::new("phc_your_api_key"));
+//!   let _guard = better_posthog::init(better_posthog::ClientConfig {
+//!     api_key: Some("phc_your_api_key".to_string()),
+//!     ..Default::default()
+//!   });
 //!
 //!   tauri::Builder::default()
 //!     .plugin(tauri_plugin_better_posthog::init())

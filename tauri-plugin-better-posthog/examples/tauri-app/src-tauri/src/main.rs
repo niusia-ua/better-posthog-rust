@@ -2,8 +2,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-  let _guard =
-    better_posthog::init(better_posthog::ClientConfig::new(env!("POSTHOG_API_KEY")).host(better_posthog::Host::EU));
+  let config = better_posthog::ClientConfig {
+    api_key: option_env!("POSTHOG_API_KEY").map(ToString::to_string),
+    host: better_posthog::Host::EU,
+    ..Default::default()
+  };
+  let _guard = better_posthog::init(config);
 
   tauri::Builder::default()
     .plugin(tauri_plugin_better_posthog::init())
