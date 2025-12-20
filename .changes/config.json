@@ -1,0 +1,40 @@
+{
+  "gitSiteUrl": "https://github.com/niusia-ua/better-posthog-rust/",
+  "pkgManagers": {
+    "javascript": {
+      "version": true,
+      "getPublishedVersion": {
+        "use": "fetch:check",
+        "options": {
+          "url": "https://registry.npmjs.com/${ pkg.pkg }/${ pkg.pkgFile.version }"
+        }
+      },
+      "publish": ["pnpm publish --access public"]
+    },
+    "rust": {
+      "version": true,
+      "getPublishedVersion": {
+        "use": "fetch:check",
+        "options": {
+          "url": "https://crates.io/api/v1/crates/${ pkg.pkg }/${ pkg.pkgFile.version }"
+        }
+      },
+      "publish": ["cargo publish --no-verify --allow-dirty"]
+    }
+  },
+  "packages": {
+    "better-posthog": {
+      "path": "./better-posthog/",
+      "manager": "rust"
+    },
+
+    "tauri-plugin-better-posthog-rs": {
+      "path": "./tauri-plugin-better-posthog/",
+      "manager": "rust"
+    },
+    "tauri-plugin-better-posthog-js": {
+      "path": "./tauri-plugin-better-posthog/",
+      "manager": "javascript"
+    }
+  }
+}
