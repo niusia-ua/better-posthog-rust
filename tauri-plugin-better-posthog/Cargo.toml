@@ -1,6 +1,6 @@
 [package]
 name = "tauri-plugin-better-posthog"
-version = "0.0.0"
+version = "0.1.0"
 description = "Tauri integration with PostHog"
 repository = { workspace = true }
 authors = { workspace = true }
