@@ -16,7 +16,7 @@ An ergonomic Rust SDK for [PostHog](https://posthog.com/).
 ## FAQ
 
 <details>
-  <summary>Why not [`posthog-rs`](https://github.com/PostHog/posthog-rs)?</summary>
+  <summary>Why not <a href="https://github.com/PostHog/posthog-rs"><code>posthog-rs</code></a>?</summary>
 
   The official crate is not actively maintained, though it is currently served by a person from the PostHog team.
   Therefore, PRs that introduce even minor features aren't merged for month.
