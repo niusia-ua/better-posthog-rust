@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.2.1]
+
+- [`ec50f4f`](https://github.com/niusia-ua/better-posthog-rust/commit/ec50f4f2ee926e055e6a1c53f1d9e7f1faee89fb) Fixes the `init` function options argument.
+
 ## \[0.2.0]
 
 - [`bd4e625`](https://github.com/niusia-ua/better-posthog-rust/commit/bd4e625edc78477242db03cb954f4a51648298fa) ([#10](https://github.com/niusia-ua/better-posthog-rust/pull/10)) A new `before_send` option allows you to modify, filter, or sample events before they are sent:
