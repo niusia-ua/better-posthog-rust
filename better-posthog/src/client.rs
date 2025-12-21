@@ -23,7 +23,7 @@ impl Client {
 #[derive(Debug, Clone)]
 pub struct ClientOptions {
   /// The PostHog API key. If `None`, the client will not be initialized.
-  pub api_key: Option<String>,
+  pub api_key: Option<ApiKey>,
   /// The target PostHog host.
   pub host: Host,
   /// Timeout for graceful shutdown (default: 2 seconds).
@@ -37,6 +37,46 @@ impl Default for ClientOptions {
       host: Host::default(),
       shutdown_timeout: Duration::from_secs(2),
     }
+  }
+}
+
+impl<T: Into<ApiKey>> From<T> for ClientOptions {
+  fn from(api_key: T) -> Self {
+    Self {
+      api_key: Some(api_key.into()),
+      ..Default::default()
+    }
+  }
+}
+
+impl<T: Into<ApiKey>> From<(T, Self)> for ClientOptions {
+  fn from((api_key, mut options): (T, Self)) -> Self {
+    options.api_key = Some(api_key.into());
+    options
+  }
+}
+
+/// PostHog API key newtype.
+#[derive(Debug, Clone)]
+pub struct ApiKey(String);
+
+impl ApiKey {
+  /// Returns the API key as a string slice.
+  #[must_use]
+  pub fn as_str(&self) -> &str {
+    &self.0
+  }
+}
+
+impl From<&str> for ApiKey {
+  fn from(key: &str) -> Self {
+    Self(key.to_owned())
+  }
+}
+
+impl From<String> for ApiKey {
+  fn from(key: String) -> Self {
+    Self(key)
   }
 }
 

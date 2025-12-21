@@ -38,8 +38,8 @@ mod client;
 mod context;
 mod worker;
 
+pub use client::{ApiKey, ClientOptions, Host};
 use client::{CLIENT, Client};
-pub use client::{ClientOptions, Host};
 
 pub mod events;
 pub use events::{Event, EventBuilder};

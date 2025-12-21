@@ -3,7 +3,7 @@
 
 fn main() {
   let options = better_posthog::ClientOptions {
-    api_key: option_env!("POSTHOG_API_KEY").map(ToString::to_string),
+    api_key: option_env!("POSTHOG_API_KEY").map(Into::into),
     host: better_posthog::Host::EU,
     ..Default::default()
   };
