@@ -13,11 +13,11 @@ An ergonomic Rust SDK for [PostHog](https://posthog.com/).
 ## Usage
 
 ```rust
-use better_posthog::{init, events, ClientConfig, Event};
+use better_posthog::{events, Event};
 
 fn main() {
   // Initialize the client.
-  let _guard = better_posthog::init(better_posthog::ClientConfig {
+  let _guard = better_posthog::init(better_posthog::ClientOptions {
     api_key: Some("phc_your_api_key".to_string()),
     ..Default::default()
   });
@@ -47,7 +47,7 @@ fn main() {
 ## Configuration
 
 ```rust
-let _guard = better_posthog::init(better_posthog::ClientConfig {
+let _guard = better_posthog::init(better_posthog::ClientOptions {
   api_key: Some("phc_your_api_key".to_string()),
   host: better_posthog::Host::EU, // or `Host::US`, `Host::Custom(String::from("https://..."))`
   shutdown_timeout: std::time::Duration::from_secs(5),

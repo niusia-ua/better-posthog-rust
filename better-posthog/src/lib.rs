@@ -8,7 +8,7 @@
 //! use better_posthog::{events, Event};
 //!
 //! // Initialize the client.
-//! let _guard = better_posthog::init(better_posthog::ClientConfig {
+//! let _guard = better_posthog::init(better_posthog::ClientOptions {
 //!   api_key: Some("phc_your_api_key".to_string()),
 //!   ..Default::default()
 //! });
@@ -39,7 +39,7 @@ mod context;
 mod worker;
 
 use client::{CLIENT, Client};
-pub use client::{ClientConfig, Host};
+pub use client::{ClientOptions, Host};
 
 pub mod events;
 pub use events::{Event, EventBuilder};
@@ -52,9 +52,9 @@ pub use events::{Event, EventBuilder};
 /// # Examples
 ///
 /// ```no_run
-/// use better_posthog::{init, ClientConfig};
+/// use better_posthog::{init, ClientOptions};
 ///
-/// let _guard = init(ClientConfig::new("phc_your_api_key"));
+/// let _guard = init(ClientOptions::new("phc_your_api_key"));
 ///
 /// // ... application code ...
 ///
@@ -93,22 +93,22 @@ impl Drop for ClientGuard {
 /// # Examples
 ///
 /// ```no_run
-/// let _guard = better_posthog::init(better_posthog::ClientConfig {
+/// let _guard = better_posthog::init(better_posthog::ClientOptions {
 ///   api_key: Some("phc_your_api_key".to_string()),
 ///   host: better_posthog::Host::EU,
 ///   shutdown_timeout: std::time::Duration::from_secs(5),
 /// });
 /// ```
-pub fn init(config: ClientConfig) -> ClientGuard {
-  let shutdown_timeout = config.shutdown_timeout;
+pub fn init(options: ClientOptions) -> ClientGuard {
+  let shutdown_timeout = options.shutdown_timeout;
 
-  if config.api_key.is_none() {
+  if options.api_key.is_none() {
     log::warn!("PostHog client not initialized: no API key provided");
     return ClientGuard { shutdown_timeout };
   }
 
   assert!(
-    CLIENT.set(Client::new(config)).is_ok(),
+    CLIENT.set(Client::new(options)).is_ok(),
     "PostHog client already initialized"
   );
 

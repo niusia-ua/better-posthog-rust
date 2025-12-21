@@ -16,7 +16,7 @@ Initialize the PostHog client and register the plugin in your Tauri application:
 ```rust
 fn main() {
   // Initialize the client (keep the guard alive for the application lifetime).
-  let _guard = better_posthog::init(better_posthog::ClientConfig {
+  let _guard = better_posthog::init(better_posthog::ClientOptions {
     api_key: Some("phc_your_api_key".to_string()),
     ..Default::default()
   });
