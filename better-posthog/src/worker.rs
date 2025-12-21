@@ -78,19 +78,23 @@ impl Worker {
 
             match task {
               Task::Capture(mut event) => {
+                log::trace!("Processing capture task for event: {}", event.event);
                 saturate_event(&mut event);
                 send_capture(&http_client, &options, &event);
               }
               Task::Batch(mut events) => {
+                log::trace!("Processing batch task with {} events", events.len());
                 for event in &mut events {
                   saturate_event(event);
                 }
                 send_batch(&http_client, &options, &events);
               }
               Task::Flush(sender) => {
+                log::trace!("Processing flush task");
                 sender.send(()).ok();
               }
               Task::Shutdown => {
+                log::trace!("Shutting down worker thread");
                 return;
               }
             }
@@ -110,6 +114,7 @@ impl Worker {
   ///
   /// If the queue is full, the event is dropped and a warning is logged.
   pub fn capture(&self, event: Event) {
+    log::trace!("Capturing {} event", event.event);
     if let Err(e) = self.sender.try_send(Task::Capture(event)) {
       log::warn!("PostHog event dropped: {e}");
     }
@@ -119,6 +124,7 @@ impl Worker {
   ///
   /// If the queue is full, the batch is dropped and a warning is logged.
   pub fn batch(&self, events: Vec<Event>) {
+    log::trace!("Capturing batch with {} events", events.len());
     if let Err(e) = self.sender.try_send(Task::Batch(events)) {
       log::warn!("PostHog batch dropped: {e}");
     }
@@ -128,6 +134,7 @@ impl Worker {
   ///
   /// Returns `true` if the flush completed within the timeout.
   pub fn flush(&self, timeout: Duration) -> bool {
+    log::trace!("Flushing event with {timeout:?} timeout");
     let (sender, receiver) = sync_channel(1);
     let _ = self.sender.send(Task::Flush(sender));
     receiver.recv_timeout(timeout).is_ok()
@@ -157,6 +164,7 @@ fn send_capture(client: &reqwest::blocking::Client, options: &ClientOptions, eve
 
   match serde_json::to_string(&payload) {
     Ok(body) => {
+      log::trace!("Serialized payload size: {} bytes", body.len());
       let result = client
         .post(&url)
         .header("Content-Type", "application/json")
@@ -164,7 +172,9 @@ fn send_capture(client: &reqwest::blocking::Client, options: &ClientOptions, eve
         .send();
 
       match result {
-        Ok(response) if response.status().is_success() => {}
+        Ok(response) if response.status().is_success() => {
+          log::trace!("Capture request successful: status {}", response.status());
+        }
         Ok(response) if response.status().as_u16() == 401 => {
           log::error!("PostHog authentication failed: invalid API key");
         }
@@ -203,6 +213,7 @@ fn send_batch(client: &reqwest::blocking::Client, options: &ClientOptions, event
 
   match serde_json::to_string(&payload) {
     Ok(body) => {
+      log::trace!("Serialized batch payload size: {} bytes", body.len());
       let result = client
         .post(&url)
         .header("Content-Type", "application/json")
@@ -210,7 +221,9 @@ fn send_batch(client: &reqwest::blocking::Client, options: &ClientOptions, event
         .send();
 
       match result {
-        Ok(response) if response.status().is_success() => {}
+        Ok(response) if response.status().is_success() => {
+          log::trace!("Batch request successful: status {}", response.status());
+        }
         Ok(response) if response.status().as_u16() == 401 => {
           log::error!("PostHog authentication failed: invalid API key");
         }
