@@ -3784,6 +3784,7 @@ name = "tauri-app"
 version = "0.0.0"
 dependencies = [
  "better-posthog",
+ "fastrand",
  "log",
  "tauri",
  "tauri-build",

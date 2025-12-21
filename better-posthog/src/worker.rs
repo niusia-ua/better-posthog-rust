@@ -60,7 +60,7 @@ pub struct Worker {
 
 impl Worker {
   /// Creates a new worker with a background thread for sending events.
-  pub fn new(options: ClientOptions) -> Self {
+  pub fn new(mut options: ClientOptions) -> Self {
     let (sender, receiver) = sync_channel(256);
     let shutdown = Arc::new(AtomicBool::new(false));
 
@@ -80,14 +80,33 @@ impl Worker {
               Task::Capture(mut event) => {
                 log::trace!("Processing capture task for event: {}", event.event);
                 saturate_event(&mut event);
-                send_capture(&http_client, &options, &event);
-              }
-              Task::Batch(mut events) => {
-                log::trace!("Processing batch task with {} events", events.len());
-                for event in &mut events {
-                  saturate_event(event);
+                if let Some(event) = apply_before_send(&mut options, event) {
+                  send_capture(&http_client, &options, &event);
+                } else {
+                  log::trace!("Event was dropped by before_send hook");
                 }
-                send_batch(&http_client, &options, &events);
+              }
+              Task::Batch(events) => {
+                let events_count = events.len();
+                log::trace!("Processing batch task with {events_count} events");
+
+                let events: Vec<Event> = events
+                  .into_iter()
+                  .filter_map(|mut event| {
+                    saturate_event(&mut event);
+                    apply_before_send(&mut options, event)
+                  })
+                  .collect();
+                if events_count != events.len() {
+                  log::trace!(
+                    "{} events were dropped by before_send hook",
+                    events_count - events.len()
+                  );
+                }
+
+                if !events.is_empty() {
+                  send_batch(&http_client, &options, &events);
+                }
               }
               Task::Flush(sender) => {
                 log::trace!("Processing flush task");
@@ -149,6 +168,24 @@ impl Drop for Worker {
       handle.join().ok();
     }
   }
+}
+
+/// Applies all `before_send` hooks to an event.
+///
+/// Returns `Some(event)` if the event should be sent, `None` if it was discarded.
+/// The event is discarded on panic.
+fn apply_before_send(options: &mut ClientOptions, mut event: Event) -> Option<Event> {
+  for hook in &mut options.before_send {
+    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| hook(event))) {
+      Ok(Some(e)) => event = e,
+      Ok(None) => return None,
+      Err(_) => {
+        log::error!("Panic in before_send hook, discarding event");
+        return None;
+      }
+    }
+  }
+  Some(event)
 }
 
 /// Sends a single event to PostHog via `/i/v0/e/`.

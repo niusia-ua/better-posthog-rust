@@ -14,3 +14,4 @@ tauri-plugin-log = "2.7.1"
 tauri-plugin-better-posthog = { workspace = true }
 better-posthog = { workspace = true }
 log = "0.4.29"
+fastrand = "2.3.0"

@@ -38,7 +38,7 @@ mod client;
 mod context;
 mod worker;
 
-pub use client::{ApiKey, ClientOptions, Host};
+pub use client::{ApiKey, BeforeSendFn, ClientOptions, Host};
 use client::{CLIENT, Client};
 
 pub mod events;
