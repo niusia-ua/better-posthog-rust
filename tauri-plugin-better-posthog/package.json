@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "tauri-plugin-better-posthog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Nazar Antoniuk <nazarantoniuk18@gmail.com>",
   "description": "Tauri integration with PostHog",
   "license": "MIT",

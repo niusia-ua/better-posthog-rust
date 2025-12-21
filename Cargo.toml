@@ -28,4 +28,4 @@ wildcard_dependencies = "deny"
 
 [workspace.dependencies]
 better-posthog = { version = "0.2.1", path = "better-posthog" }
-tauri-plugin-better-posthog = { version = "0.1.0", path = "tauri-plugin-better-posthog" }
+tauri-plugin-better-posthog = { version = "0.1.1", path = "tauri-plugin-better-posthog" }
