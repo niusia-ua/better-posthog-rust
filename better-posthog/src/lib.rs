@@ -99,7 +99,8 @@ impl Drop for ClientGuard {
 ///   shutdown_timeout: std::time::Duration::from_secs(5),
 /// });
 /// ```
-pub fn init(options: ClientOptions) -> ClientGuard {
+pub fn init(options: impl Into<ClientOptions>) -> ClientGuard {
+  let options = options.into();
   let shutdown_timeout = options.shutdown_timeout;
 
   if options.api_key.is_none() {
