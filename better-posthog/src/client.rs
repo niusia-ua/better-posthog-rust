@@ -1,7 +1,46 @@
+use std::fmt;
 use std::sync::OnceLock;
 use std::time::Duration;
 
+use crate::Event;
 use crate::worker::Worker;
+
+/// Hook that can modify or discard events before sending.
+///
+/// Each hook receives an owned [`Event`] and can:
+/// - Return `Some(event)` to pass the (possibly modified) event to the next hook
+/// - Return `None` to discard the event and stop further processing
+///
+/// Hooks are executed in order after the event is enriched with library/OS context.
+/// If any hook panics, the event is discarded and an error is logged.
+///
+/// # Thread Safety
+///
+/// Hooks run in a background worker thread, so they must be `Send + 'static`.
+/// If you need randomness (e.g., for sampling), use a `Send`-compatible RNG like [`fastrand::Rng`](https://docs.rs/fastrand) initialized before the closure.
+///
+/// # Example
+///
+/// ```
+/// let options = better_posthog::ClientOptions {
+///   api_key: Some("phc_your_api_key".into()),
+///   before_send: vec![{
+///     // Initialize a scoped `Send`-compatible RNG.
+///     let mut rng = fastrand::Rng::new();
+///
+///     // Return a `before_send` hook.
+///     Box::new(move |event| {
+///       let sample_rate = match event.event.as_str() {
+///         "button_click" => 0.5, // Process only a half of `button_click` events.
+///         _ => 1.0, // Process all other events.
+///       };
+///       if rng.f64() < sample_rate { Some(event) } else { None }
+///     })
+///   }],
+///   ..Default::default()
+/// };
+/// ```
+pub type BeforeSendFn = Box<dyn FnMut(Event) -> Option<Event> + Send + 'static>;
 
 /// Global client instance.
 pub static CLIENT: OnceLock<Client> = OnceLock::new();
@@ -20,7 +59,6 @@ impl Client {
 }
 
 /// Configuration for the PostHog client.
-#[derive(Debug, Clone)]
 pub struct ClientOptions {
   /// The PostHog API key. If `None`, the client will not be initialized.
   pub api_key: Option<ApiKey>,
@@ -28,6 +66,19 @@ pub struct ClientOptions {
   pub host: Host,
   /// Timeout for graceful shutdown (default: 2 seconds).
   pub shutdown_timeout: Duration,
+  /// Hooks to modify or filter events before sending.
+  pub before_send: Vec<BeforeSendFn>,
+}
+
+impl fmt::Debug for ClientOptions {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    f.debug_struct("ClientOptions")
+      .field("api_key", &self.api_key)
+      .field("host", &self.host)
+      .field("shutdown_timeout", &self.shutdown_timeout)
+      .field("before_send", &format!("[{} hooks]", self.before_send.len()))
+      .finish()
+  }
 }
 
 impl Default for ClientOptions {
@@ -36,16 +87,24 @@ impl Default for ClientOptions {
       api_key: None,
       host: Host::default(),
       shutdown_timeout: Duration::from_secs(2),
+      before_send: Vec::new(),
+    }
+  }
+}
+
+impl ClientOptions {
+  /// Creates a new `ClientOptions` with the given API key and default settings.
+  pub fn new<T: Into<ApiKey>>(api_key: T) -> Self {
+    Self {
+      api_key: Some(api_key.into()),
+      ..Default::default()
     }
   }
 }
 
 impl<T: Into<ApiKey>> From<T> for ClientOptions {
   fn from(api_key: T) -> Self {
-    Self {
-      api_key: Some(api_key.into()),
-      ..Default::default()
-    }
+    Self::new(api_key)
   }
 }
 
