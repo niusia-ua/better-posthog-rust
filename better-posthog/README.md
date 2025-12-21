@@ -8,6 +8,7 @@ An ergonomic Rust SDK for [PostHog](https://posthog.com/).
 - Non-blocking and error-free event capture with background worker thread.
 - Builder pattern for flexible event construction.
 - Automatic OS and library metadata enrichment.
+- Support for events editing, filtering, and sampling via the `before_send` option.
 - Graceful shutdown with configurable timeout.
 
 ## Usage
@@ -50,6 +51,7 @@ fn main() {
 let _guard = better_posthog::init(better_posthog::ClientOptions {
   api_key: Some("phc_your_api_key".into()),
   host: better_posthog::Host::EU, // or `Host::US`, `Host::Custom(String::from("https://..."))`
+  before_send: vec![], // Hooks to edit, filter, or sample events before sending.
   shutdown_timeout: std::time::Duration::from_secs(5),
 });
 ```

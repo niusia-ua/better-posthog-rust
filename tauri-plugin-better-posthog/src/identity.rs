@@ -11,7 +11,7 @@ const IDENTITY_FILE_NAME: &str = ".posthog-id";
 pub enum IdentityStrategy<R: tauri::Runtime> {
   /// Automatically generates and persists a UUID v4 to the app data directory.
   ///
-  /// On first run, creates a `.posthog.id` file containing a new UUID.
+  /// On first run, creates a `.posthog-id` file containing a new UUID.
   /// On subsequent runs, reads the existing UUID from the file.
   ///
   /// If file I/O fails, falls back to [`Anonymous`](IdentityStrategy::Anonymous) mode.
