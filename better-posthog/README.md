@@ -18,7 +18,7 @@ use better_posthog::{events, Event};
 fn main() {
   // Initialize the client.
   let _guard = better_posthog::init(better_posthog::ClientOptions {
-    api_key: Some("phc_your_api_key".to_string()),
+    api_key: Some("phc_your_api_key".into()),
     ..Default::default()
   });
 
@@ -48,7 +48,7 @@ fn main() {
 
 ```rust
 let _guard = better_posthog::init(better_posthog::ClientOptions {
-  api_key: Some("phc_your_api_key".to_string()),
+  api_key: Some("phc_your_api_key".into()),
   host: better_posthog::Host::EU, // or `Host::US`, `Host::Custom(String::from("https://..."))`
   shutdown_timeout: std::time::Duration::from_secs(5),
 });

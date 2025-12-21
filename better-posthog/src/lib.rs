@@ -9,7 +9,7 @@
 //!
 //! // Initialize the client.
 //! let _guard = better_posthog::init(better_posthog::ClientOptions {
-//!   api_key: Some("phc_your_api_key".to_string()),
+//!   api_key: Some("phc_your_api_key".into()),
 //!   ..Default::default()
 //! });
 //!
@@ -94,7 +94,7 @@ impl Drop for ClientGuard {
 ///
 /// ```no_run
 /// let _guard = better_posthog::init(better_posthog::ClientOptions {
-///   api_key: Some("phc_your_api_key".to_string()),
+///   api_key: Some("phc_your_api_key".into()),
 ///   host: better_posthog::Host::EU,
 ///   shutdown_timeout: std::time::Duration::from_secs(5),
 /// });
