@@ -15,8 +15,8 @@
 //! ```ignore
 //! fn main() {
 //!   // Initialize PostHog client first.
-//!   let _guard = better_posthog::init(better_posthog::ClientConfig {
-//!     api_key: Some("phc_your_api_key".to_string()),
+//!   let _guard = better_posthog::init(better_posthog::ClientOptions {
+//!     api_key: Some("phc_your_api_key".into()),
 //!     ..Default::default()
 //!   });
 //!

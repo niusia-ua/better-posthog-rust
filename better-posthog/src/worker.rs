@@ -9,7 +9,7 @@ use serde::Serialize;
 use serde_json::Value;
 
 use crate::Event;
-use crate::client::ClientConfig;
+use crate::client::ClientOptions;
 use crate::context::saturate_event;
 
 /// Messages that can be sent to the worker thread.
@@ -60,7 +60,7 @@ pub struct Worker {
 
 impl Worker {
   /// Creates a new worker with a background thread for sending events.
-  pub fn new(config: ClientConfig) -> Self {
+  pub fn new(options: ClientOptions) -> Self {
     let (sender, receiver) = sync_channel(256);
     let shutdown = Arc::new(AtomicBool::new(false));
 
@@ -79,13 +79,13 @@ impl Worker {
             match task {
               Task::Capture(mut event) => {
                 saturate_event(&mut event);
-                send_capture(&http_client, &config, &event);
+                send_capture(&http_client, &options, &event);
               }
               Task::Batch(mut events) => {
                 for event in &mut events {
                   saturate_event(event);
                 }
-                send_batch(&http_client, &config, &events);
+                send_batch(&http_client, &options, &events);
               }
               Task::Flush(sender) => {
                 sender.send(()).ok();
@@ -145,10 +145,10 @@ impl Drop for Worker {
 }
 
 /// Sends a single event to PostHog via `/i/v0/e/`.
-fn send_capture(client: &reqwest::blocking::Client, config: &ClientConfig, event: &Event) {
-  let url = config.host.capture_url();
+fn send_capture(client: &reqwest::blocking::Client, options: &ClientOptions, event: &Event) {
+  let url = options.host.capture_url();
   let payload = CapturePayload {
-    api_key: config.api_key.as_ref().expect("API key must be present"),
+    api_key: options.api_key.as_ref().expect("API key must be present").as_str(),
     event: &event.event,
     distinct_id: &event.distinct_id,
     properties: &event.properties,
@@ -183,10 +183,10 @@ fn send_capture(client: &reqwest::blocking::Client, config: &ClientConfig, event
 }
 
 /// Sends a batch of events to PostHog via `/batch/`.
-fn send_batch(client: &reqwest::blocking::Client, config: &ClientConfig, events: &[Event]) {
-  let url = config.host.batch_url();
+fn send_batch(client: &reqwest::blocking::Client, options: &ClientOptions, events: &[Event]) {
+  let url = options.host.batch_url();
   let payload = BatchPayload {
-    api_key: config.api_key.as_ref().expect("API key must be present"),
+    api_key: options.api_key.as_ref().expect("API key must be present").as_str(),
     batch: events
       .iter()
       .map(|event| {
