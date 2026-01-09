@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.2.2]
+
+- [`9353ddc`](https://github.com/niusia-ua/better-posthog-rust/commit/9353ddce39c231e7cb74f42feb007fd258bf53c5) ([#16](https://github.com/niusia-ua/better-posthog-rust/pull/16)) Update dependencies.
+
 ## \[0.2.1]
 
 - [`ec50f4f`](https://github.com/niusia-ua/better-posthog-rust/commit/ec50f4f2ee926e055e6a1c53f1d9e7f1faee89fb) Fixes the `init` function options argument.
