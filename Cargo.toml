@@ -27,5 +27,5 @@ redundant_feature_names = "deny"
 wildcard_dependencies = "deny"
 
 [workspace.dependencies]
-better-posthog = { version = "0.2.1", path = "better-posthog" }
-tauri-plugin-better-posthog = { version = "0.1.1", path = "tauri-plugin-better-posthog" }
+better-posthog = { version = "0.2.3", path = "better-posthog" }
+tauri-plugin-better-posthog = { version = "0.1.3", path = "tauri-plugin-better-posthog" }
