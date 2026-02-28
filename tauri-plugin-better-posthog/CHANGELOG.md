@@ -1,5 +1,9 @@
 # Changelog
 
+## \[0.1.4]
+
+- [`39b4351`](https://github.com/niusia-ua/better-posthog-rust/commit/39b43513d2f70883e5ae66f97df7458e6c01d915) ([#30](https://github.com/niusia-ua/better-posthog-rust/pull/30)) Update dependencies.
+
 ## \[0.1.3]
 
 - [`d8f0852`](https://github.com/niusia-ua/better-posthog-rust/commit/d8f08524f8d0a594f7e3d13d9e1f71380fd8dea0) ([#22](https://github.com/niusia-ua/better-posthog-rust/pull/22)) Update dependencies.
