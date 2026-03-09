@@ -1,5 +1,14 @@
 # Changelog
 
+## \[0.1.6]
+
+- [\`\`](https://github.com/niusia-ua/better-posthog-rust/commit/undefined) Version updates to fix publication.
+
+## \[0.1.5]
+
+- [`8f82550`](https://github.com/niusia-ua/better-posthog-rust/commit/8f82550efd15b75f6a16f616fbac0f4e676b538f) ([#34](https://github.com/niusia-ua/better-posthog-rust/pull/34)) Update dependencies.
+- [`590f8c0`](https://github.com/niusia-ua/better-posthog-rust/commit/590f8c0ba0cb31dff39d3f5014b248f03d2133cf) ([#33](https://github.com/niusia-ua/better-posthog-rust/pull/33)) Tauri default features are disabled.
+
 ## \[0.1.4]
 
 - [`39b4351`](https://github.com/niusia-ua/better-posthog-rust/commit/39b43513d2f70883e5ae66f97df7458e6c01d915) ([#30](https://github.com/niusia-ua/better-posthog-rust/pull/30)) Update dependencies.
